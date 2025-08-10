@@ -24,6 +24,12 @@ const userSchema = new mongoose.Schema({
     enum : ['user', 'admin'],
     default : 'user'
   },
+  password : {
+    type : String,
+    required : true,
+    minLength : 6,
+    select : false
+  },
   searchString : {
     type : String,
     index : true
@@ -66,7 +72,7 @@ userSchema.pre('findOneAndUpdate', function(next){
 
 //delete password
 userSchema.methods.toJSON = function(){
-    const obj = this.toObject();
+    const obj = this.toObject()
     delete obj.password;
     return obj
 }

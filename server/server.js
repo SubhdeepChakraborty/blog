@@ -5,6 +5,7 @@ import dotenv from "dotenv"
 import logger from "./src/utils/logger.js"
 import connectDB from "./src/config/db.js"
 import errorHandler from "./src/middleware/errorHandler.js"
+import userRouter from "./src/routes/user.routes.js"
 
 const app = express()
 dotenv.config()
@@ -17,7 +18,7 @@ app.use(helmet())
 connectDB()
 
 //routes
-
+app.use('/api/v1', userRouter)
 
 //using our handler
 app.use(errorHandler)
