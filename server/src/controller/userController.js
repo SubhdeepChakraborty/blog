@@ -2,61 +2,67 @@ import logger from "../utils/logger.js"
 import User from "../models/user.js"
 import { validateUserLogin, validateUserRegistration } from "../utils/validation.js"
 import generateToken from "../utils/generateToken.js"
+import dotenv from "dotenv"
 
+dotenv.config()
 
 //create user
 const createUser = async(req, res) => {
     try {
-        logger.info(`Hitting the create user endpoint ....`)
-        //validate schema
-        const {error} = validateUserRegistration(req.body)
-        if(error){
-            logger.warn('validation error', error.details[0].message)
-            return res.status(400).send({
-                status: false,
-                message: error.details[0].message
-            })
-        }
-        const {username, email, password, role} = req.body
-        let user = await User.findOne({
-            $or : [
-                {email},
-                {username}
-            ]
-        })
-        console.log(user)
-        if(user) {
-            logger.info(`User already exists ${email}`)
-            return res.status(400).send({
-                status : false,
-                message : 'User already exists'
-            })
-        }
-        user = new User({
-            username,
-            email,
-            password,
-            role
-        })
+      logger.info(`Hitting the create user endpoint ....`);
+      //validate schema
+      const { error } = validateUserRegistration(req.body);
+      if (error) {
+        logger.warn("validation error", error.details[0].message);
+        return res.status(400).send({
+          status: false,
+          message: error.details[0].message,
+        });
+      }
+      const { username, email, password, role } = req.body;
+      let user = await User.findOne({
+        $or: [{ email }, { username }],
+      });
+      console.log(user);
+      if (user) {
+        logger.info(`User already exists ${email}`);
+        return res.status(400).send({
+          status: false,
+          message: "User already exists",
+        });
+      }
+      user = new User({
+        username,
+        email,
+        password,
+        role,
+      });
 
-        await user.save()
-        logger.info(`User have been created`)
+      await user.save();
+      logger.info(`User have been created`);
 
-        //Generating token
-        const {accessToken, refreshToken} = await generateToken(user)
+      //Generating token
+      const { accessToken, refreshToken } = await generateToken(user);
 
-        return res.status(201).send({
-            status : true,
-            data : [
-                {
-                    userId : user._id,
-                    username : user.username,
-                    email : user.email,
-                    accessToken,
-                    refreshToken
-                }
-            ]
-        })
+      // Inside createUser or loginUser (after generating tokens)
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true, // cannot be accessed by JS
+        secure : process.env.NODE_ENV === 'production',
+        maxAge: 1 * 24 * 60 * 60 * 1000, // 7 days
+      });
+
+      return res.status(201).send({
+        status: true,
+        data: [
+          {
+            userId: user._id,
+            username: user.username,
+            email: user.email,
+            accessToken,
+            // refreshToken,
+          },
+        ],
+      });
     } catch (error) {
         logger.info(`This is an error : ${error}`)
         return resizeBy.status(500).send({
@@ -105,6 +111,12 @@ const loginUser = async(req, res) => {
 
         const { accessToken, refreshToken } = await generateToken(user);
 
+        res.cookie("refreshToken", refreshToken, {
+          httpOnly: true, // cannot be accessed by JS
+          secure: process.env.NODE_ENV === "production",
+          maxAge: 1 * 24 * 60 * 60 * 1000, // 1 days
+        });
+
         return res.status(200).send({
           status: true,
           message: "User login successful",
@@ -113,7 +125,7 @@ const loginUser = async(req, res) => {
               userId: user._id,
               username: user.username,
               accessToken,
-              refreshToken,
+            //   refreshToken,
             },
           ],
         });
