@@ -3,6 +3,7 @@ import Img from '../imageKit/Img';
 import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getUserlogin } from "../../utils/api.js";
 
 const Login = () => {
   const navigate = useNavigate()
@@ -13,13 +14,19 @@ const Login = () => {
   const [password, setPassword] = useState("")
   const [email, setEmail] = useState("")
 
-   const handleSubmit = (e) => {
+   const handleSubmit = async (e) => {
      e.preventDefault();
       console.log(email, password)
      // Dummy auth logic
-     if (email == "admin@gmail.com" && password == "admin123") {
-       login();
-       navigate("/"); // Redirect after login
+     if (email && password) {
+      const userLogin = await getUserlogin({
+        email : email,
+        password : password
+      })
+      if (userLogin.status) {
+        login()
+        navigate("/"); // Redirect after login
+      }
      } else {
        alert("Invalid credentials");
      }
