@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserlogin } from "../../utils/api.js";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const navigate = useNavigate()
@@ -16,20 +17,41 @@ const Login = () => {
 
    const handleSubmit = async (e) => {
      e.preventDefault();
-      console.log(email, password)
-     // Dummy auth logic
-     if (email && password) {
+
+      //if valid email and password ain't provided
+      if(!email && !password){
+        toast.error(" ❌ Please put your real credentials!", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light"
+        });
+      }
+
       const userLogin = await getUserlogin({
         email : email,
         password : password
       })
+
       if (userLogin.status) {
-        login()
+        login(userLogin.data)
         navigate("/"); // Redirect after login
+      }else{
+         toast.error(" ❌ User login failed! Please try again later", {
+           position: "top-right",
+           autoClose: 2000,
+           hideProgressBar: false,
+           closeOnClick: false,
+           pauseOnHover: true,
+           draggable: true,
+           progress: undefined,
+           theme: "light",
+         });
       }
-     } else {
-       alert("Invalid credentials");
-     }
    };
 
   return (

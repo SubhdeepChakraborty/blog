@@ -3,6 +3,7 @@ import { useAuth } from "../components/context/AuthContext";
 
 const ProtectedRoute = () => {
   const {isLoggedIn} = useAuth() 
+
   return isLoggedIn ? <Outlet/> : <Navigate to='/login' />
 }
 

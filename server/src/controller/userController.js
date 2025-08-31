@@ -3,8 +3,25 @@ import User from "../models/user.js"
 import { validateUserLogin, validateUserRegistration } from "../utils/validation.js"
 import generateToken from "../utils/generateToken.js"
 import dotenv from "dotenv"
+import RefreshToken from "../models/token.js"
 
 dotenv.config()
+
+//ping
+const ping = async(req, res) => {
+  try {
+    return res.status(200).send({
+      status: false,
+      message : 'Server is up and running..'
+    })
+  } catch (error) {
+    logger.warn(`Something went wrong ${error.stack}`)
+    return res.status(500).send({
+      status : false,
+      message : `Internal server error`
+    })
+  }
+}
 
 //create user
 const createUser = async(req, res) => {
@@ -140,6 +157,69 @@ const loginUser = async(req, res) => {
     }
 }
 
+//refreshtoken
+const refreshToken = async(req, res) => {
+  logger.info('Hitting refreshToken endpoint....')
+  try {
+    const {refreshTokenUser} = req.body
+    if (!refreshTokenUser) {
+      logger.warn("Refresh token is required");
+      return res.status(400).send({
+        status: false,
+        message: "Refresh token is required",
+      });
+    }
+    //Verify the refresh token
+    const storedToken = await RefreshToken.findOne({
+      token: refreshTokenUser,
+    });
+
+    if(!storedToken || storedToken.expiresAt < new Date()){
+      logger.warn('Invalid refresh token')
+      return res.status(400).send({
+        status : false,
+        message : 'Invalid refresh token'
+      })
+    }
+
+    //find the user
+    const user = await User.findById(storedToken.user)
+    if(!user){
+      logger.warn('User not found')
+      return res.status(404).send({
+        status : false,
+        message : 'User not found'
+      })
+    }
+
+    //Generate new accessToken
+    const { accessToken: newacessToken, refreshToken: newrefreshToken } =
+      await generateToken(user);
+
+    //delete the old one
+    await RefreshToken.deleteOne({_id : storedToken._id})
+
+    return res.status(201).send({
+      status: true,
+      message: "New acess token generated successfully",
+      data: [
+        {
+          userId: user._id,
+          username: user.username,
+          accessToken: newacessToken,
+          refreshToken: newrefreshToken,
+        },
+      ],
+    });
+
+  } catch (error) {
+    logger.warn(`Something went wrong... ${error}`)
+    return res.status(500).send({
+      status : false,
+      message : 'Internal server error'
+    })
+  }
+}
 
 
-export { createUser, loginUser };
+export { createUser, loginUser, refreshToken, ping };

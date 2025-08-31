@@ -9,7 +9,7 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
 
   //Login-Logout-context
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, logout } = useAuth();
 
   //react-router-dom
   // eslint-disable-next-line
@@ -32,6 +32,7 @@ const Navbar = () => {
   //Handling Click
   const handleClick = (e) => {
     e.preventDefault();
+    logout()
     navigate("/login");
   };
 
@@ -169,7 +170,7 @@ const Navbar = () => {
               </Link>
             ))}
             <button className="button-btn" onClick={handleClick}>
-              Login
+              Logout
             </button>
           </div>
         </div>

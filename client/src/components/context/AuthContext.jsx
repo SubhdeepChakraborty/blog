@@ -1,26 +1,54 @@
-import {createContext, useContext, useState} from "react"
+import { createContext, useContext, useEffect, useState } from "react";
 
-//Creating context
 const AuthContext = createContext();
 
-export const AuthProvider = ({children}) => {
-    //Login - logout
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+export const AuthProvider = ({ children }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    Boolean(localStorage.getItem("accessToken"))
+  );
+  const [acessToken, setAcesstoken] = useState(
+    () => localStorage.getItem("accessToken") || null
+  );
+  const [user, setUser] = useState(
+    () => JSON.parse(localStorage.getItem("user")) || null
+  );
 
-    const login = () => setIsLoggedIn(true)
-    const logout = () => setIsLoggedIn(false)
+  useEffect(() => {
+    setIsLoggedIn(Boolean(acessToken));
+  }, [acessToken]);
 
-    return (
-        <AuthContext.Provider value={{
-            login,
-            logout,
-            isLoggedIn
-        }} >
-            {children}
-        </AuthContext.Provider>
-    )
-}
+  const login = (payload) => {
+    console.log(payload);
 
-// eslint-disable-next-line
-export const useAuth = () => useContext(AuthContext)
+    const { userId, username, accessToken } = payload[0];
 
+    setIsLoggedIn(true);
+    setUser({ userId, username });
+    setAcesstoken(accessToken);
+
+    console.log(user, accessToken, isLoggedIn, "data on state")
+
+    // Save to localStorage
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("user", JSON.stringify({ userId, username }));
+  };
+
+  const logout = () => {
+    setIsLoggedIn(false);
+    setUser(null);
+    setAcesstoken(null);
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("user");
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{ login, logout, user, acessToken, isLoggedIn }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const useAuth = () => useContext(AuthContext);
