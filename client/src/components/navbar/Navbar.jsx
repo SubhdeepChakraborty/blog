@@ -123,7 +123,7 @@ const Navbar = () => {
                     className=" cursor-pointer w-full py-4 px-6 bg-gradient-to-bl from-sky-950 to-gray-800 text-white rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 group"
                     onClick={handleClick}
                   >
-                    <span>Login</span>
+                    <span>Logout</span>
                   </button>
                 </div>
 
