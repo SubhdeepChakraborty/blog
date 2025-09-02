@@ -12,6 +12,8 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(
     () => JSON.parse(localStorage.getItem("user")) || null
   );
+  
+  const [loader, setLoader] = useState(false)
 
   useEffect(() => {
     setIsLoggedIn(Boolean(acessToken));
@@ -25,6 +27,7 @@ export const AuthProvider = ({ children }) => {
     setIsLoggedIn(true);
     setUser({ userId, username });
     setAcesstoken(accessToken);
+    setLoader(true)
 
     console.log(user, accessToken, isLoggedIn, "data on state")
 
@@ -43,7 +46,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ login, logout, user, acessToken, isLoggedIn }}
+      value={{ login, logout, user, acessToken, isLoggedIn, loader, setLoader }}
     >
       {children}
     </AuthContext.Provider>

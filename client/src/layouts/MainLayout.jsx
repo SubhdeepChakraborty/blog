@@ -1,8 +1,22 @@
 import { Outlet } from "react-router-dom";
 import { Navbar } from "../components";
 import { ToastContainer } from "react-toastify";
+import { Loader } from "./components";
+import { useAuth } from "../components/context/AuthContext";
+import { useEffect} from "react";
 
 const MainLayout = () => {
+
+  const {loader, setLoader} = useAuth()
+
+  useEffect(() => {
+    // Fake delay for loader effect
+    const timer = setTimeout(() => setLoader(false), 1500);
+    return () => clearTimeout(timer);
+  }, [loader]);
+
+  if (loader) return <Loader />;
+
   return (
     <>
       <Navbar />
