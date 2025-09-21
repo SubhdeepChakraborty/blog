@@ -41,7 +41,7 @@ const Login = () => {
         login(userLogin.data)
         navigate("/"); // Redirect after login
       }else{
-         toast.error(" ❌ User login failed! Please try again later", {
+         toast.error("login failed! Please try again later", {
            position: "top-right",
            autoClose: 2000,
            hideProgressBar: false,

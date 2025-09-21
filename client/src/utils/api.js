@@ -1,5 +1,4 @@
 import axios from "axios"
-import {toast} from "react-toastify"
 
 export const api = axios.create({
   baseURL: "http://localhost:3000/api/v1",
@@ -86,9 +85,6 @@ export const getUserlogin = async({email = '', password = ''}) => {
 
         return { status: true, data: payload , message: res.data?.message};
     } catch (error) {
-       toast.error("Something went wrong.", {
-         closeButton: false,
-       });
        return {status : false, message: error.message, data : []}
     }
 }

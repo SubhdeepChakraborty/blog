@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link} from "react-router-dom"
 import "./home.css"
-import Category from './components/Category'
+import { Category, Feature, Postlist } from './components'
 
 const Home = () => {
   return (
@@ -19,7 +19,7 @@ const Home = () => {
           <h1 className="text-2xl font-bold text-gray-50 md:text-5xl lg:text-6xl whitespace-normal text-clip">
             Social media has changed the way we communicate with each other.
           </h1>
-          <p className="mt-8 text-md md:text-xl whitespace-normal text-clip">
+          <p className="mt-8 md:text-xl whitespace-normal text-clip">
             while social media helps us communicate more often, it might also
             make our conversations less personal and more complicated.
           </p>
@@ -60,7 +60,9 @@ const Home = () => {
       {/* categories */}
       <Category />
       {/* //featured post */}
+      <Feature />
       {/* //post list */}
+      <Postlist />
     </div>
   );
 }
