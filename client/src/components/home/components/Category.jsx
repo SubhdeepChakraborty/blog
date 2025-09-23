@@ -5,7 +5,7 @@ const Category = () => {
   return (
     <div className=" md:flex bg-white rounded-3xl xl:rounded-full shadow-lg items-center p-4 justify-center gap-8">
       {/* links */}
-      <div className="flex-1">
+      <div className="flex flex-1 mb-4 sm:mb-0">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 text-center items-center w-full">
           <Link
             to={"/posts"}
@@ -51,7 +51,7 @@ const Category = () => {
           </Link>
         </div>
       </div>
-      <span className="text-xl font-medium">|</span>
+      <span className="text-xl font-medium hidden sm:inline-block">|</span>
       {/* search */}
       <div className="relative">
         {/* Optional search icon */}

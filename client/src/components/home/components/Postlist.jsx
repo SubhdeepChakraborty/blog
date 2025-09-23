@@ -19,7 +19,7 @@ const PostItem = ({ title, para, user, topic }) => {
         </div>
       </div>
       <div className="flex-none hidden xl:block rounded-3xl obejct-cover overflow-hidden">
-        <Img src="featured1.jpeg" alt="Post" />
+        <Img src="featured1.jpeg" alt="Post" width={500} />
       </div>
     </div>
   );

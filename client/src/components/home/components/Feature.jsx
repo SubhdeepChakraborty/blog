@@ -9,7 +9,7 @@ const Box = ({src, title, paragraph, number}) => {
       <div className="rounded-3xl h-[100px] lg:h-[200px] w-1/3 overflow-hidden">
         <Img
           src={src}
-          height={"100%"}
+          height={100}
           width={"100%"}
           alt={title}
         />
@@ -41,7 +41,7 @@ const Feature = () => {
       <div className="w-full lg:w-1/2 flex flex-col gap-4">
         {/* Image */}
         <div className="rounded-3xl object-cover overflow-hidden">
-          <Img src={"featured1.jpeg"} height={"100%"} width={"100%"} />
+          <Img src={"featured1.jpeg"} height={500} width={"100%"} />
         </div>
         {/* Details */}
         <div className="flex items-center gap-2 ">

@@ -11,6 +11,10 @@ const Img = ({src, width, height, alt}) => {
           alt={alt}
           loading = 'lazy'
           lqip={{active : true, quality : 20}}
+          transformation={[{
+            width : width,
+            height : height
+          }]}
         />
       </ImageKitProvider>
     </>
